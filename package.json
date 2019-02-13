@@ -1,0 +1,27 @@
+{
+  "name": "signature",
+  "version": "1.0.0",
+  "description": "Sign js file with OpenPgP",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "./node_modules/.bin/mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "ejs-mate": "^3.0.0",
+    "express": "^4.16.4",
+    "multer": "^1.4.1",
+    "openpgp": "^4.4.6",
+    "request": "^2.88.0",
+    "terser": "^3.16.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "mocha": "^5.2.0"
+  }
+}
