@@ -7,78 +7,60 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('Sign', ()=>{
-    describe('URL', ()=>{
-        it('empty URL', (done)=>{
-            chai.request(app)
-                .get('/sign/url')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: file URL not valid');
-                    done();
-                });
+describe('Sign', () => {
+    describe('URL', () => {
+        it('empty URL', async () => {
+            const res = await chai.request(app)
+                .get('/sign/url');
+
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: File URL required');
         });
-        it('bad file URL without http(s)', (done)=>{
-            chai.request(app)
-                .get('/sign/url?url=test.ry/re.js')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: file URL not valid');
-                    done();
-                });
+        it('bad file URL without http(s)', async ()=> {
+            const res = await chai.request(app)
+                .get('/sign/url?url=test.ry/re.js');
+
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: File URL not valid');
         });
-        it('bad file URL', (done)=>{
-            chai.request(app)
-                .get('/sign/url?url=https://test.ry/re.js')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: bad file URL');
-                    done();
-                });
+        it('bad file URL', async()=> {
+            const res = await chai.request(app)
+                .get('/sign/url?url=https://test.ry/re.js');
+
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: Bad file response');
         });
     });
 
     describe('Text', ()=>{
-        it('without data', (done)=>{
-            chai.request(app)
-                .post('/sign/text')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: JS not valid');
-                    done();
-                });
+        it('without data', async ()=>{
+            const res = await chai.request(app)
+                .post('/sign/text');
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: JS not valid');
         });
-        it('empty', (done)=>{
-            chai.request(app)
+        it('empty', async ()=>{
+            const res = await chai.request(app)
                 .post('/sign/text')
-                .send({text:''})
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: JS not valid');
-                    done();
-                });
+                .send({text:''});
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: JS not valid');
         });
-        it('bad js', (done)=>{
-            chai.request(app)
+        it('bad js', async ()=>{
+            const res = await chai.request(app)
                 .post('/sign/text')
-                .send({text: 'hello'})
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: JS not valid');
-                    done();
-                });
+                .send({text: 'hello'});
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: JS not valid');
         });
     });
 
     describe('File', ()=>{
-        it('without file', (done)=>{
-            chai.request(app)
-                .post('/sign/file')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.text).to.equal('Error: File don\'t upload');
-                    done();
-                });
+        it('without file', async ()=>{
+            const res = await chai.request(app)
+                .post('/sign/file');
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal('Error: File don\'t upload');
         });
     });
 });
