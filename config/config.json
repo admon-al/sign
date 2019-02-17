@@ -1,5 +1,6 @@
 {
   "pubkey": "",
   "privkey": "",
-  "passphrase" : ""
+  "passphrase" : "",
+  "port": 3010
 }

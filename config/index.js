@@ -12,9 +12,9 @@ const environments = [ENV_PRODUCTION, ENV_DEVELOPMENT, ENV_TEST];
 const environment = environments.indexOf(NODE_ENV) ? NODE_ENV : ENV_DEVELOPMENT;
 
 nconf
-    .argv()
-    .env()
-    .file({file: path.join(__dirname, `config.${environment}.json`)})
-    .defaults(require('./config.json'));
+  .argv()
+  .env()
+  .file({ file: path.join(__dirname, `config.${environment}.json`) })
+  .defaults(require("./config.json"));
 
 module.exports = nconf;

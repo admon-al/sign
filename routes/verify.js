@@ -1,11 +1,10 @@
-const
-    express = require('express'),
-    router = express.Router(),
-    utils = require('../utils'),
-    VerofyController = require('../controllers/VerifyController');
+const express = require("express"),
+  router = express.Router(),
+  utils = require("../utils"),
+  VerifyController = require("../controllers/VerifyController");
 
-router.get('/url', VerofyController.url);
-router.post('/text', VerofyController.text);
-router.post('/file', utils.upload, VerofyController.file);
+router.get("/url", VerifyController.url);
+router.post("/text", VerifyController.text);
+router.post("/file", utils.upload, VerifyController.file);
 
 module.exports = router;
