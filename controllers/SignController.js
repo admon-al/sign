@@ -4,10 +4,10 @@ const
 exports.url = async (req, res) => {
   try {
     const url = req.query.url || "";
+
     const body = await utils.getFileFromURL(url);
     const data = await utils.sign(body);
-
-    res.type("js");
+    res.set('Content-Type', 'text/javascript');
     res.send(data);
   } catch (error) {
     res.send("Error: " + error.message);

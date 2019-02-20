@@ -27,7 +27,7 @@ const getFileFromURL = async file_url => {
   }
   try {
     const response = await axios.get(file_url);
-    return response;
+    return response.data;
   } catch (error) {
     throw new Error("Bad file response");
   }
