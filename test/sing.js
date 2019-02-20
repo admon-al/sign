@@ -1,6 +1,6 @@
 const chai = require("chai"),
   chaiHttp = require("chai-http"),
-  cheerio = require('cheerio'),
+  cheerio = require("cheerio"),
   fs = require("fs"),
   utils = require("../utils");
 
@@ -58,7 +58,7 @@ describe("Sign Controller", () => {
       expect(res).to.have.status(200);
 
       const $ = cheerio.load(res.text);
-      const content = $('#sign').val();
+      const content = $("#sign").val();
       expect(content.length).to.equal(1096 + text.length);
 
       const verify = await utils.verify(content);
@@ -98,15 +98,15 @@ describe("Sign Controller", () => {
       expect(res).to.have.status(200);
       expect(res.text).to.equal("Error: JS not valid");
     });
-    it("upload good js file", async()=>{
-      const data = fs.readFileSync('test/ok.js.txt');
+    it("upload good js file", async () => {
+      const data = fs.readFileSync("test/ok.js.txt");
       const text = Buffer.from(data).toString();
       const res = await chai
         .request(app)
         .post("/sign/file")
         .attach("file", data, "ok.js");
       expect(res).to.have.status(200);
-      expect(res.text.length).to.equal(1096+text.length);
+      expect(res.text.length).to.equal(1096 + text.length);
 
       const verify = await utils.verify(res.text);
       expect(verify).to.equal(text);

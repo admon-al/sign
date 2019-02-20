@@ -15,6 +15,13 @@ describe("Utils", () => {
     it("empty text", async () => {
       expect(utils.sign("")).be.rejectedWith("Empty string");
     });
+    it("sign -> verify", async () => {
+      const text = 'function test(){alert("test")}';
+      const res = await utils.sign(text);
+      const res_verify = await utils.verify(res);
+      expect(res_verify.length).to.equal(text.length);
+      expect(text).to.equal(res_verify);
+    });
   });
   describe("Verify function", () => {
     it("empty text", async () => {
@@ -22,6 +29,11 @@ describe("Utils", () => {
     });
     it("short text", async () => {
       expect(utils.verify("test")).be.rejectedWith("File don't have sign");
+    });
+    it("good text", async () => {
+      const text = 'function test(){alert("test")}';
+      const sign_text = await utils.sign(text);
+      expect(utils.verify(sign_text)).be.fulfilled;
     });
   });
   describe("getFileFromURL function", () => {
