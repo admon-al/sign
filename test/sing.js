@@ -59,9 +59,9 @@ describe("Sign Controller", () => {
 
       const $ = cheerio.load(res.text);
       const content = $("#sign").val();
-      expect(content.length).to.equal(1096 + text.length);
+      expect(content.length).to.not.equal(0);
 
-      const verify = await utils.verify(content);
+      const verify = await utils.verificationCode(content);
       expect(verify).to.equal(text);
     });
     it("send bad js code", async () => {
@@ -106,9 +106,9 @@ describe("Sign Controller", () => {
         .post("/sign/file")
         .attach("file", data, "ok.js");
       expect(res).to.have.status(200);
-      expect(res.text.length).to.equal(1096 + text.length);
+      expect(res.text.length).to.not.equal(0);
 
-      const verify = await utils.verify(res.text);
+      const verify = await utils.verificationCode(res.text);
       expect(verify).to.equal(text);
     });
   });

@@ -13,27 +13,27 @@ describe("Utils", () => {
   });
   describe("Sign function", () => {
     it("empty text", async () => {
-      expect(utils.sign("")).be.rejectedWith("Empty string");
+      expect(utils.signatureCode("")).be.rejectedWith("Empty string");
     });
     it("sign -> verify", async () => {
       const text = 'function test(){alert("test")}';
-      const res = await utils.sign(text);
-      const res_verify = await utils.verify(res);
+      const res = await utils.signatureCode(text);
+      const res_verify = await utils.verificationCode(res);
       expect(res_verify.length).to.equal(text.length);
       expect(text).to.equal(res_verify);
     });
   });
   describe("Verify function", () => {
     it("empty text", async () => {
-      expect(utils.verify("")).be.rejectedWith("Empty string");
+      expect(utils.verificationCode("")).be.rejectedWith("Empty string");
     });
     it("short text", async () => {
-      expect(utils.verify("test")).be.rejectedWith("File don't have sign");
+      expect(utils.verificationCode("test")).be.rejectedWith("File don't have signature");
     });
     it("good text", async () => {
       const text = 'function test(){alert("test")}';
-      const sign_text = await utils.sign(text);
-      expect(utils.verify(sign_text)).be.fulfilled;
+      const sign_text = await utils.signatureCode(text);
+      expect(utils.verificationCode(sign_text)).be.fulfilled;
     });
   });
   describe("getFileFromURL function", () => {

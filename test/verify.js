@@ -41,7 +41,7 @@ describe("Verify Controller", () => {
     it("send text", async () => {
       const data = fs.readFileSync("test/ok.js.txt");
       const text = Buffer.from(data).toString();
-      const sign_text = await utils.sign(text);
+      const sign_text = await utils.signatureCode(text);
       const res = await chai
         .request(app)
         .post("/verify/text")
@@ -75,18 +75,18 @@ describe("Verify Controller", () => {
         .post("/verify/file")
         .attach("file", "test/bad.js.txt", "bad.js");
       expect(res).to.have.status(200);
-      expect(res.text).to.equal("Error: File don't have sign");
+      expect(res.text).to.equal("Error: File don't have signature");
     });
     it("upload good js file", async () => {
       const data = fs.readFileSync("test/ok.js.txt");
       const text = Buffer.from(data).toString();
-      const sign_text = await utils.sign(text);
+      const sign_text = await utils.signatureCode(text);
       const res = await chai
         .request(app)
         .post("/verify/file")
         .attach("file", Buffer.from(sign_text, "utf8"), "ok.js");
       expect(res).to.have.status(200);
-      expect(res.text.length).to.equal(text.length);
+      expect(res.text.length).to.not.equal(0);
       expect(res.text).to.equal(text);
     });
   });

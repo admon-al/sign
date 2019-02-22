@@ -11,11 +11,8 @@ chai.use(chaiHttp);
 describe("Test network request", () => {
   describe("URL Sign", () => {
     it("status 200 URL bad js", async () => {
-      const url = "http://test.ru";
-      nock(url)
-        .defaultReplyHeaders({
-          "Content-Type": "text/javascript"
-        })
+      nock("http://test.ru")
+        .defaultReplyHeaders({ "Content-Type": "text/javascript" })
         .get("/file.js")
         .reply(200, "Hello from Google!");
       const res = await chai
@@ -25,11 +22,8 @@ describe("Test network request", () => {
       expect(res.text).to.equal("Error: JS not valid");
     });
     it("status 200 URL ok js", async () => {
-      const url = "http://test.ru";
-      nock(url)
-        .defaultReplyHeaders({
-          "Content-Type": "text/javascript"
-        })
+      nock("http://test.ru")
+        .defaultReplyHeaders({ "Content-Type": "text/javascript" })
         .get("/file.js")
         .reply(200, "function test(){return a+b;}");
       const res = await chai
@@ -42,25 +36,21 @@ describe("Test network request", () => {
   });
   describe("URL Verify", () => {
     it("status 200 URL bad js", async () => {
-      const url = "http://test.ru";
-      nock(url)
-        .defaultReplyHeaders({
-          "Content-Type": "text/javascript"
-        })
+      nock("http://test.ru")
+        .defaultReplyHeaders({ "Content-Type": "text/javascript" })
         .get("/file.js")
         .reply(200, "Hello from Google!");
       const res = await chai
         .request(app)
         .get("/verify/url?url=http://test.ru/file.js");
       expect(res).to.have.status(200);
-      expect(res.text).to.equal("Error: File don't have sign");
+      expect(res.text).to.equal("Error: File don't have signature");
     });
     it("status 200 URL ok js", async () => {
-      const url = "http://test.ru";
       const body = "function test(){return a+b;}";
-      const sign_body = await utils.sign(body);
-      nock(url)
-        .defaultReplyHeaders({"Content-Type": "text/javascript"})
+      const sign_body = await utils.signatureCode(body);
+      nock("http://test.ru")
+        .defaultReplyHeaders({ "Content-Type": "text/javascript" })
         .get("/file.js")
         .reply(200, sign_body);
       const res = await chai
