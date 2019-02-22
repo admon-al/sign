@@ -2,6 +2,7 @@ const chai = require("chai"),
   chaiHttp = require("chai-http"),
   cheerio = require("cheerio"),
   fs = require("fs"),
+  path = require("path"),
   utils = require("../utils");
 
 const app = require("../app");
@@ -65,7 +66,7 @@ describe("Verify Controller", () => {
       const res = await chai
         .request(app)
         .post("/verify/file")
-        .attach("file", "test/empty.js.txt", "empty.js");
+        .attach("file", Buffer.from("", "utf8"), "empty.js");
       expect(res).to.have.status(200);
       expect(res.text).to.equal("Error: Empty string");
     });
@@ -78,7 +79,7 @@ describe("Verify Controller", () => {
       expect(res.text).to.equal("Error: File don't have signature");
     });
     it("upload good js file", async () => {
-      const data = fs.readFileSync("test/ok.js.txt");
+      const data = fs.readFileSync(path.join(__dirname, "ok.js.txt"));
       const text = Buffer.from(data).toString();
       const sign_text = await utils.signatureCode(text);
       const res = await chai

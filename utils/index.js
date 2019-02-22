@@ -55,16 +55,20 @@ const signatureCode = async original => {
     //.replace(/(\r\n|\n|\r)/gm, "")
     .replace("Version: OpenPGP.js v4.4.6\r\n", "")
     .replace("Comment: https://openpgpjs.org\r\n", "");
-  return `${original}/*${Buffer.from(detachedSig).toString("base64")}*/`;
+  return `${original}/**${Buffer.from(detachedSig, "utf8").toString("base64")}**/`;
 };
 
 const verificationCode = async text => {
-  if (validator.isEmpty(text)) throw new Error("Empty string");
-  if (text.length < 1096) throw new Error("File don't have signature");
+  const re = /\/\*\*[\w\W]*\\*\*\/$/gi;
 
-  let detachedSig = text.slice(-1096);
-  const data = text.slice(0, -1096);
-  detachedSig = detachedSig.slice(2, -2);
+  if (validator.isEmpty(text)) throw new Error("Empty string");
+  const result = text.match(re);
+  if (result === null) throw new Error("File don't have signature");
+
+  let detachedSig = result[0];
+  // remove /* ... */
+  detachedSig = detachedSig.slice(3, -3);
+  let data = text.replace(re, "");
 
   const minify_text = minify(data);
   const options = {
