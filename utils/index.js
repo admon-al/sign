@@ -38,7 +38,7 @@ const upload = multer({
   fileSize: 5 * 1024
 }).single("file");
 
-const sign = async original => {
+const signatureCode = async original => {
   const minify_text = minify(original);
   const privateKeyObj = (await openpgp.key.readArmored(config.get("privkey")))
     .keys[0];
@@ -58,9 +58,9 @@ const sign = async original => {
   return `${original}/*${Buffer.from(detachedSig).toString("base64")}*/`;
 };
 
-const verify = async text => {
+const verificationCode = async text => {
   if (validator.isEmpty(text)) throw new Error("Empty string");
-  if (text.length < 1096) throw new Error("File don't have sign");
+  if (text.length < 1096) throw new Error("File don't have signature");
 
   let detachedSig = text.slice(-1096);
   const data = text.slice(0, -1096);
@@ -84,6 +84,6 @@ module.exports = {
   minify,
   getFileFromURL,
   upload,
-  sign,
-  verify
+  signatureCode,
+  verificationCode
 };
