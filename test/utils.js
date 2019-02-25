@@ -1,5 +1,6 @@
 const chai = require("chai"),
   chaiAsPromised = require("chai-as-promised"),
+  verification = require("../verification"),
   utils = require("../utils");
 
 chai.use(chaiAsPromised);
@@ -13,27 +14,48 @@ describe("Utils", () => {
   });
   describe("Sign function", () => {
     it("empty text", async () => {
-      expect(utils.signatureCode("")).be.rejectedWith("Empty string");
+      expect(verification.signatureCode("")).be.rejectedWith("Empty string");
     });
     it("sign -> verify", async () => {
       const text = 'function test(){alert("test")}';
-      const res = await utils.signatureCode(text);
-      const res_verify = await utils.verificationCode(res);
+      const res = await verification.signatureCode(text);
+      const res_verify = await verification.verificationCode(res);
       expect(res_verify.length).to.equal(text.length);
       expect(text).to.equal(res_verify);
+    });
+    it("diff sign two words", async () => {
+      const text1 = "a+b";
+      const text2 = "b+a";
+
+      const sign1 = await utils.sign(text1);
+      const sign2 = await utils.sign(text2);
+      expect(sign1).to.not.equal(sign2);
     });
   });
   describe("Verify function", () => {
     it("empty text", async () => {
-      expect(utils.verificationCode("")).be.rejectedWith("Empty string");
+      expect(verification.verificationCode("")).be.rejectedWith("Empty string");
     });
     it("short text", async () => {
-      expect(utils.verificationCode("test")).be.rejectedWith("File don't have signature");
+      expect(verification.verificationCode("test")).be.rejectedWith("File don't have signature");
     });
     it("good text", async () => {
       const text = 'function test(){alert("test")}';
-      const sign_text = await utils.signatureCode(text);
-      expect(utils.verificationCode(sign_text)).be.fulfilled;
+      const sign_text = await verification.signatureCode(text);
+      expect(verification.verificationCode(sign_text)).be.fulfilled;
+    });
+    it("verify diff two words, change sign", async () => {
+      const text1 = "a+b";
+      const text2 = "b+a";
+
+      const sign1 = await utils.sign(text1);
+      const sign2 = await utils.sign(text2);
+
+      expect(await utils.verify(text1, sign1)).to.equal(true);
+      expect(await utils.verify(text2, sign2)).to.equal(true);
+
+      expect(await utils.verify(text1, sign2)).to.equal(false);
+      expect(await utils.verify(text2, sign1)).to.equal(false);
     });
   });
   describe("getFileFromURL function", () => {

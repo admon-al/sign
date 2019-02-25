@@ -1,7 +1,7 @@
 const chai = require("chai"),
   chaiHttp = require("chai-http"),
   nock = require("nock"),
-  utils = require("../utils");
+  verification = require("../verification");
 
 const app = require("../app");
 const expect = chai.expect;
@@ -48,7 +48,7 @@ describe("Test network request", () => {
     });
     it("status 200 URL ok js", async () => {
       const body = "function test(){return a+b;}";
-      const sign_body = await utils.signatureCode(body);
+      const sign_body = await verification.signatureCode(body);
       nock("http://test.ru")
         .defaultReplyHeaders({ "Content-Type": "text/javascript" })
         .get("/file.js")

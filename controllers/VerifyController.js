@@ -1,10 +1,12 @@
-const utils = require("../utils");
+const
+  verification = require("../verification"),
+  utils = require("../utils");
 
 exports.url = async (req, res) => {
   try {
     const url = req.query.url || "";
     const body = await utils.getFileFromURL(url);
-    const data = await utils.verificationCode(body);
+    const data = await verification.verificationCode(body);
     res.set("Content-Type", "text/javascript");
     res.send(data);
   } catch (error) {
@@ -15,7 +17,7 @@ exports.url = async (req, res) => {
 exports.text = async (req, res) => {
   try {
     const text = req.body.text || "";
-    const data = await utils.verificationCode(text);
+    const data = await verification.verificationCode(text);
     res.render("verify", { data });
   } catch (error) {
     res.send("Error: " + error.message);
@@ -29,7 +31,7 @@ exports.file = async (req, res) => {
     const originalFileName = req.file.originalname;
     const body = Buffer.from(req.file.buffer).toString("utf8");
 
-    const text = await utils.verificationCode(body);
+    const text = await verification.verificationCode(body);
     const fileName = originalFileName;
     res.set("Content-disposition", `attachment; filename=${fileName}`);
     res.set("Content-Type", "text/javascript");

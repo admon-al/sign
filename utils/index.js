@@ -38,56 +38,34 @@ const upload = multer({
   fileSize: 5 * 1024
 }).single("file");
 
-const signatureCode = async original => {
-  const minify_text = minify(original);
+const sign = async(text) =>{
   const privateKeyObj = (await openpgp.key.readArmored(config.get("privkey")))
     .keys[0];
   await privateKeyObj.decrypt(config.get("passphrase"));
   const options = {
-    message: openpgp.cleartext.fromText(minify_text),
+    message: openpgp.cleartext.fromText(text),
     privateKeys: [privateKeyObj],
     detached: true
   };
   const signed = await openpgp.sign(options);
-  let detachedSig = signed.signature;
-
-  detachedSig = detachedSig
-    //.replace(/(\r\n|\n|\r)/gm, "")
-    .replace("Version: OpenPGP.js v4.4.6\r\n", "")
-    .replace("Comment: https://openpgpjs.org\r\n", "");
-  return `${original}/**${Buffer.from(detachedSig, "utf8").toString("base64")}**/`;
+  return signed.signature;
 };
 
-const verificationCode = async text => {
-  const re = /\/\*\*[\w\W]*\\*\*\/$/gi;
-
-  if (validator.isEmpty(text)) throw new Error("Empty string");
-  const result = text.match(re);
-  if (result === null) throw new Error("File don't have signature");
-
-  let detachedSig = result[0];
-  // remove /* ... */
-  detachedSig = detachedSig.slice(3, -3);
-  let data = text.replace(re, "");
-
-  const minify_text = minify(data);
+const verify = async (text, sig)=>{
   const options = {
-    message: openpgp.cleartext.fromText(minify_text),
-    signature: await openpgp.signature.readArmored(
-      Buffer.from(detachedSig, "base64").toString("ascii")
-    ),
+    message: openpgp.cleartext.fromText(text),
+    signature: await openpgp.signature.readArmored(sig),
     publicKeys: (await openpgp.key.readArmored(config.get("pubkey"))).keys
   };
   const verified = await openpgp.verify(options);
   const validity = verified.signatures[0].valid;
-  if (!validity) throw new Error("File not verified");
-  return data;
+  return validity;
 };
 
 module.exports = {
   minify,
   getFileFromURL,
   upload,
-  signatureCode,
-  verificationCode
+  sign,
+  verify
 };

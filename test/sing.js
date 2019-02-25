@@ -2,7 +2,7 @@ const chai = require("chai"),
   chaiHttp = require("chai-http"),
   cheerio = require("cheerio"),
   fs = require("fs"),
-  utils = require("../utils");
+  verification = require("../verification");
 
 const app = require("../app");
 const expect = chai.expect;
@@ -61,7 +61,7 @@ describe("Sign Controller", () => {
       const content = $("#sign").val();
       expect(content.length).to.not.equal(0);
 
-      const verify = await utils.verificationCode(content);
+      const verify = await verification.verificationCode(content);
       expect(verify).to.equal(text);
     });
     it("send bad js code", async () => {
@@ -108,7 +108,7 @@ describe("Sign Controller", () => {
       expect(res).to.have.status(200);
       expect(res.text.length).to.not.equal(0);
 
-      const verify = await utils.verificationCode(res.text);
+      const verify = await verification.verificationCode(res.text);
       expect(verify).to.equal(text);
     });
   });

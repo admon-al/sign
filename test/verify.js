@@ -3,6 +3,7 @@ const chai = require("chai"),
   cheerio = require("cheerio"),
   fs = require("fs"),
   path = require("path"),
+  verification = require("../verification"),
   utils = require("../utils");
 
 const app = require("../app");
@@ -42,7 +43,7 @@ describe("Verify Controller", () => {
     it("send text", async () => {
       const data = fs.readFileSync("test/ok.js.txt");
       const text = Buffer.from(data).toString();
-      const sign_text = await utils.signatureCode(text);
+      const sign_text = await verification.signatureCode(text);
       const res = await chai
         .request(app)
         .post("/verify/text")
@@ -81,7 +82,7 @@ describe("Verify Controller", () => {
     it("upload good js file", async () => {
       const data = fs.readFileSync(path.join(__dirname, "ok.js.txt"));
       const text = Buffer.from(data).toString();
-      const sign_text = await utils.signatureCode(text);
+      const sign_text = await verification.signatureCode(text);
       const res = await chai
         .request(app)
         .post("/verify/file")
