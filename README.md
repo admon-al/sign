@@ -1,6 +1,6 @@
 Sign JS files with OpenPGP [![Build Status](https://travis-ci.com/admon-al/sign.svg?branch=master)](https://travis-ci.com/admon-al/sign) [![Coverage Status](https://coveralls.io/repos/github/admon-al/sign/badge.svg)](https://coveralls.io/github/admon-al/sign)
 =========
-
+Проект позволяющий подписывать JavaScript файлы с использованием OpenPGP и проверять подпись на соответствие содержанию.
 ## Генерация ключей (Ubuntu)
 устанвливаем необходимый пакет\
  `sudo apt-get install gpa`\
@@ -69,9 +69,9 @@ the OS a chance to collect more entropy! (Need 227 more bytes)
 
 Экспортируем публичный и приватный ключи
 ```
-gpg –export -a “1D50BE34” > public.key
+gpg –export -a "1D50BE34" > public.key
 
-gpg –export-secret-key -a ”1D50BE34” > private.key
+gpg –export-secret-key -a "1D50BE34" > private.key
 ```
 
 Добавляем ключи в конфиг config/config.json
