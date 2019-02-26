@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
-    "test": "./node_modules/.bin/mocha --timeout 10000"
+    "test": "./node_modules/.bin/mocha --timeout 10000",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +30,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.2.1",
     "cheerio": "^1.0.0-rc.2",
+    "coveralls": "^3.0.3",
     "eslint": "^5.13.0",
     "eslint-plugin-node": "^8.0.1",
     "mocha": "^5.2.0",
